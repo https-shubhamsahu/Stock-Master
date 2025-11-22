@@ -14,7 +14,6 @@ import { z } from 'zod';
 
 const signupSchema = z
   .object({
-    loginId: z.string().min(6, 'Login ID must be between 6-12 characters.').max(12, 'Login ID must be between 6-12 characters.'),
     email: z.string().email('Invalid email address.'),
     password: z
       .string()
@@ -35,7 +34,6 @@ export default function SignupPage() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const [loginId, setLoginId] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [reenterPassword, setReenterPassword] = useState('');
@@ -51,7 +49,7 @@ export default function SignupPage() {
     e.preventDefault();
     setErrors({});
 
-    const result = signupSchema.safeParse({ loginId, email, password, reenterPassword });
+    const result = signupSchema.safeParse({ email, password, reenterPassword });
 
     if (!result.success) {
       const fieldErrors: any = {};
@@ -102,22 +100,11 @@ export default function SignupPage() {
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[400px] gap-6">
           <div className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold font-headline">Sign up Page</h1>
+            <h1 className="text-3xl font-bold font-headline">Create an Account</h1>
           </div>
           <form onSubmit={handleSignup} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="loginId">Enter Login Id</Label>
-              <Input
-                id="loginId"
-                type="text"
-                required
-                value={loginId}
-                onChange={(e) => setLoginId(e.target.value)}
-              />
-              {errors.loginId && <p className="text-sm text-destructive">{errors.loginId}</p>}
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Enter Email Id</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -128,7 +115,7 @@ export default function SignupPage() {
               {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Enter Password</Label>
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -150,7 +137,7 @@ export default function SignupPage() {
               {errors.reenterPassword && <p className="text-sm text-destructive">{errors.reenterPassword}</p>}
             </div>
             <Button type="submit" className="w-full">
-              SIGN UP
+              Sign Up
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">

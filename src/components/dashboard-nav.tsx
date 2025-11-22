@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Boxes, Gauge, GitCommitHorizontal, Settings, Truck, Warehouse, Wrench } from "lucide-react"
+import { Boxes, Gauge, GitCommitHorizontal, Settings, Truck, Warehouse, Wrench, History, Package2 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import {
@@ -22,13 +22,15 @@ import {
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: Gauge },
   { href: "/products", label: "Products", icon: Boxes },
+  { href: "/stock", label: "Stock", icon: Package2 },
+  { href: "/history", label: "Move History", icon: History },
 ]
 
 const operationsLinks = [
     { href: "/receipts", label: "Receipts", icon: Warehouse },
     { href: "/deliveries", label: "Delivery Orders", icon: Truck },
     { href: "/transfers", label: "Internal Transfers", icon: GitCommitHorizontal },
-    { href: "/adjustments", label: "Inventory Adjustments", icon: Wrench },
+    { href: "/adjustments", label: "Stock Adjustments", icon: Wrench },
 ]
 
 export function DashboardNav() {

@@ -50,7 +50,7 @@ export default function LoginPage() {
         title: 'Login Failed',
         description:
           error.code === 'auth/invalid-credential'
-            ? 'Invalid Login Id or Password.'
+            ? 'Invalid email or password.'
             : error.message,
       });
     }
@@ -81,7 +81,7 @@ export default function LoginPage() {
 
   return (
     <div className="w-full min-h-screen lg:grid lg:grid-cols-2">
-      <div className="hidden lg:flex items-center justify-center bg-primary/10 flex-col p-8 text-center">
+       <div className="hidden lg:flex items-center justify-center bg-primary/10 flex-col p-8 text-center">
         <Boxes className="h-24 w-24 text-primary mb-4" />
         <h1 className="text-4xl font-bold font-headline text-primary">
           StockMaster
@@ -99,7 +99,7 @@ export default function LoginPage() {
           </div>
           <form onSubmit={handleEmailLogin} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="email">Login Id</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -122,7 +122,7 @@ export default function LoginPage() {
               />
             </div>
             <Button type="submit" className="w-full">
-              SIGN IN
+              Login
             </Button>
           </form>
 
