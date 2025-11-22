@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export type Product = {
   id: string;
   name: string;
@@ -15,7 +17,7 @@ export type Operation = {
   id: string;
   type: 'Receipt' | 'Delivery' | 'Transfer' | 'Adjustment';
   contact?: string;
-  scheduledDate: Date;
+  scheduledDate: Date | Timestamp;
   status: OperationStatus;
   from?: string;
   to?: string;

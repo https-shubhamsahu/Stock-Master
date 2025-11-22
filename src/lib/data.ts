@@ -1,6 +1,9 @@
 import type { Product, Operation } from './types';
 import { placeholderImages } from './placeholder-images.json';
 
+// Mock data is being phased out in favor of Firestore.
+// This data will be removed once all pages are migrated.
+
 export const products: Product[] = [
   { id: 'p1', name: 'Ergonomic Office Chair', sku: 'CHR-ERGO-01', category: 'Furniture', unitOfMeasure: 'pcs', stock: 120, reorderPoint: 20, imageUrl: placeholderImages[0].imageUrl },
   { id: 'p2', name: 'Standing Desk', sku: 'DSK-STND-01', category: 'Furniture', unitOfMeasure: 'pcs', stock: 75, reorderPoint: 15, imageUrl: placeholderImages[1].imageUrl },
@@ -39,6 +42,7 @@ export const inventoryChartData = products.slice(0, 5).map(p => ({
 }));
 
 export const getInventoryForAI = () => {
+    // This function will need to be updated to use live data.
     const inventoryData = products.map(p => ({
         productName: p.name,
         sku: p.sku,
