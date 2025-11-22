@@ -1,3 +1,52 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "1",
+      "description": "Ergonomic Office Chair",
+      "imageUrl": "https://images.unsplash.com/photo-1688578735427-994ecdea3ea4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxvZmZpY2UlMjBjaGFpcnxlbnwwfHx8fDE3NjM3NjQ2MzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "office chair"
+    },
+    {
+      "id": "2",
+      "description": "Standing Desk",
+      "imageUrl": "https://images.unsplash.com/photo-1622131095786-f9a233d2c0e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8c3RhbmRpbmclMjBkZXNrfGVufDB8fHx8MTc2MzcwNzcyNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "standing desk"
+    },
+    {
+      "id": "3",
+      "description": "Wireless Keyboard",
+      "imageUrl": "https://images.unsplash.com/photo-1662830857519-2f9b28e3b4ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx3aXJlbGVzcyUyMGtleWJvYXJkfGVufDB8fHx8MTc2MzczODk0MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wireless keyboard"
+    },
+    {
+      "id": "4",
+      "description": "4K Monitor",
+      "imageUrl": "https://images.unsplash.com/photo-1560131914-2e469a0e8607?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjb21wdXRlciUyMG1vbml0b3J8ZW58MHx8fHwxNzYzNzM4OTQwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "computer monitor"
+    },
+    {
+      "id": "5",
+      "description": "Steel Rods",
+      "imageUrl": "https://images.unsplash.com/photo-1661669730663-0b2c61c26cd7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzdGVlbCUyMHJvZHN8ZW58MHx8fHwxNzYzNzg1MDMxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "steel rods"
+    },
+    {
+      "id": "6",
+      "description": "Industrial Screws",
+      "imageUrl": "https://images.unsplash.com/photo-1663638964046-4b576e739a3a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxpbmR1c3RyaWFsJTIwc2NyZXdzfGVufDB8fHx8MTc2MzgwNTQ4OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "industrial screws"
+    },
+    {
+      "id": "7",
+      "description": "Oak Wood Planks",
+      "imageUrl": "https://images.unsplash.com/photo-1597113366853-fea190b6cd82?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx3b29kJTIwcGxhbmtzfGVufDB8fHx8MTc2MzgwNTM0NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wood planks"
+    },
+    {
+      "id": "8",
+      "description": "Protective Gloves",
+      "imageUrl": "https://images.unsplash.com/photo-1646898644803-42f361bc95e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxwcm90ZWN0aXZlJTIwZ2xvdmVzfGVufDB8fHx8MTc2MzgwNTQ4OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "protective gloves"
+    }
+  ]
 }
