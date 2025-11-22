@@ -41,15 +41,7 @@ const prompt = ai.definePrompt({
 
 Inventory Data: {{{inventoryData}}}
 
-Based on the inventory data, identify the products for which the current stock is below the reorder point. For each such product, generate an alert message.
-
-Return the alerts in the following JSON format:
-
-Output Format:
-```json
-{{alerts: [{productName: string, sku: string, currentStock: number, reorderPoint: number, alertMessage: string}]}}
-```
-`, 
+Based on the inventory data, identify the products for which the current stock is below the reorder point. For each such product, generate an alert message.`, 
 });
 
 const lowStockAlertsFlow = ai.defineFlow(
