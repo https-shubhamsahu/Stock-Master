@@ -258,7 +258,8 @@
   "auth": {
     "providers": [
       "password",
-      "anonymous"
+      "anonymous",
+      "google.com"
     ]
   },
   "firestore": {
@@ -408,6 +409,6 @@
         }
       }
     ],
-    "reasoning": "The Firestore structure for StockMaster is designed to provide a secure, scalable, and easily maintainable inventory management system. It leverages path-based ownership for user-specific data and a top-level collection for shared data like categories. Authorization independence is achieved through denormalization where necessary, particularly for collaborative scenarios, avoiding the need for `get()` calls in security rules and ensuring atomic operations. Structural segregation ensures that collections contain documents with similar security needs. The design uses explicit state modeling and consistent naming conventions for improved clarity and predictability.\n\nSpecifically, Products and Categories are stored in top-level collections. Receipts, DeliveryOrders, InternalTransfers and StockAdjustments are nested under a Product to ensure integrity (as these operations always relate to a specific Product). Warehouses and Suppliers are stored at the top level.\n\nThis structure enables QAPs (Rules are not Filters) by allowing direct querying of collections based on denormalized authorization data, such as filtering products based on a user's role. Additionally, the path-based ownership (`/products/{productId}/receipts/{receiptId}`) ensures data isolation between users, which simplifies security rules and prevents unauthorized access. The use of explicit state modeling via the `status` field allows for secure listing and filtering based on the document's state, further supporting QAPs."
+    "reasoning": "The Firestore structure for StockMaster is designed to provide a secure, scalable, and easily maintainable inventory management system. It leverages path-based ownership for user-specific data and a top-level collection for shared data like categories. Authorization independence is achieved through denormalization where necessary, particularly for collaborative scenarios, avoiding the need for `get()` calls in security rules and ensuring atomic operations. Structural segregation ensures that collections contain documents with similar security needs. The design uses explicit state modeling and consistent naming conventions for improved clarity and predictability.\\n\\nSpecifically, Products and Categories are stored in top-level collections. Receipts, DeliveryOrders, InternalTransfers and StockAdjustments are nested under a Product to ensure integrity (as these operations always relate to a specific Product). Warehouses and Suppliers are stored at the top level.\\n\\nThis structure enables QAPs (Rules are not Filters) by allowing direct querying of collections based on denormalized authorization data, such as filtering products based on a user's role. Additionally, the path-based ownership (`/products/{productId}/receipts/{receiptId}`) ensures data isolation between users, which simplifies security rules and prevents unauthorized access. The use of explicit state modeling via the `status` field allows for secure listing and filtering based on the document's state, further supporting QAPs."
   }
 }

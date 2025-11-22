@@ -1,18 +1,65 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Boxes } from "lucide-react";
+'use client';
+
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Boxes } from 'lucide-react';
+import { useAuth } from '@/firebase';
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+} from 'firebase/auth';
+import { useUser } from '@/firebase';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
+  const auth = useAuth();
+  const { user, isUserLoading } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      router.push('/dashboard');
+    }
+  }, [user, router]);
+
+
+  const handleGoogleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error('Error during Google sign-in:', error);
+    }
+  };
+
+  if (isUserLoading || user) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full min-h-screen lg:grid lg:grid-cols-2">
       <div className="hidden lg:flex items-center justify-center bg-primary/10 flex-col p-8 text-center">
         <Boxes className="h-24 w-24 text-primary mb-4" />
-        <h1 className="text-4xl font-bold font-headline text-primary">StockMaster</h1>
+        <h1 className="text-4xl font-bold font-headline text-primary">
+          StockMaster
+        </h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          The future of inventory management is here. <br/>Centralized, real-time, and easy-to-use.
+          The future of inventory management is here. <br />
+          Centralized, real-time, and easy-to-use.
         </p>
       </div>
       <div className="flex items-center justify-center py-12">
@@ -48,12 +95,16 @@ export default function LoginPage() {
             <Button type="submit" className="w-full" asChild>
               <Link href="/dashboard">Login</Link>
             </Button>
-            <Button variant="outline" className="w-full">
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={handleGoogleLogin}
+            >
               Login with Google
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
+            Don&apos;t have an account?{' '}
             <Link href="#" className="underline">
               Sign up
             </Link>
