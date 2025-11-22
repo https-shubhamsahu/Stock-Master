@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Boxes } from 'lucide-react';
+import { Boxes, Chrome } from 'lucide-react';
 import { useAuth } from '@/firebase';
 import {
   GoogleAuthProvider,
@@ -22,6 +22,7 @@ import { useUser } from '@/firebase';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
+import { Separator } from '@/components/ui/separator';
 
 export default function LoginPage() {
   const auth = useAuth();
@@ -54,6 +55,21 @@ export default function LoginPage() {
       });
     }
   };
+
+  const handleGoogleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      router.push('/dashboard');
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Login Failed',
+        description: error.message,
+      });
+    }
+  };
+
 
   if (isUserLoading || user) {
     return (
@@ -108,6 +124,23 @@ export default function LoginPage() {
               SIGN IN
             </Button>
           </form>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">
+                Or continue with
+                </span>
+            </div>
+          </div>
+          
+          <Button variant="outline" className="w-full" onClick={handleGoogleLogin}>
+            <Chrome className="mr-2 h-4 w-4" />
+            Login with Google
+          </Button>
+
           <div className="text-center text-sm">
             <Link href="#" className="underline">
               Forgot Password?
