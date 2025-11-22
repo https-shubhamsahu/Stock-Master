@@ -51,7 +51,7 @@ export default function LoginPage() {
         description:
           error.code === 'auth/invalid-credential'
             ? 'Invalid email or password.'
-            : error.message,
+            : 'An unexpected error occurred. Please try again.',
       });
     }
   };
@@ -65,7 +65,7 @@ export default function LoginPage() {
       toast({
         variant: 'destructive',
         title: 'Login Failed',
-        description: error.message,
+        description: 'An unexpected error occurred during Google sign-in.',
       });
     }
   };
