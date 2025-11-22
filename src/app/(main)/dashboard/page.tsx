@@ -5,16 +5,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-    Boxes,
     Package,
     AlertTriangle,
     Clock,
     GitCommitHorizontal,
 } from "lucide-react";
-import { kpis, inventoryChartData } from "@/lib/data";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
-import { ChartTooltipContent } from "@/components/ui/chart";
+import { kpis } from "@/lib/data";
 import { LowStockAlert } from "../_components/low-stock-alert";
+import { StockChart } from "./_components/stock-chart";
 
 
 export default function DashboardPage() {
@@ -86,38 +84,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="lg:col-span-4">
-          <CardHeader>
-            <CardTitle>Top 5 Products by Stock</CardTitle>
-          </CardHeader>
-          <CardContent className="pl-2">
-            <ResponsiveContainer width="100%" height={350}>
-              <BarChart data={inventoryChartData}>
-                <XAxis
-                  dataKey="name"
-                  stroke="#888888"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={(value) => value.substring(0,15) + '...'}
-                />
-                <YAxis
-                  stroke="#888888"
-                  fontSize={12}
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={(value) => `${value}`}
-                />
-                 <Tooltip
-                  cursor={false}
-                  content={<ChartTooltipContent indicator="dot" />}
-                />
-                <Bar dataKey="stock" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
+        <StockChart />
         <LowStockAlert />
       </div>
     </div>
