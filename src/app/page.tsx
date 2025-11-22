@@ -94,7 +94,8 @@ export default function LoginPage() {
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold font-headline">Login Page</h1>
+            <Boxes className="h-16 w-16 text-primary mx-auto mb-2" />
+            <h1 className="text-3xl font-bold font-headline text-primary">StockMaster</h1>
           </div>
           <form onSubmit={handleEmailLogin} className="grid gap-4">
             <div className="grid gap-2">
