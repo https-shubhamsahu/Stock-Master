@@ -1,0 +1,212 @@
+/**
+ * This Firestore Security Ruleset is designed for the StockMaster inventory management application.
+ *
+ * Core Philosophy:
+ * The security model implements a centralized administrative control system. Read access to master data
+ * (like Categories, Warehouses, and Suppliers) is public to allow for broad client-side use without
+ * authentication. Access to transactional data (Products and their subcollections) is restricted to
+ * authenticated users. All write operations (create, update, delete) across the entire database are
+ * strictly limited to authenticated users identified as administrators.
+ *
+ * Data Structure:
+ * The data is organized into several top-level collections for master data: /categories, /warehouses,
+ * and /suppliers. The core transactional data is stored under the /products collection. To maintain
+ * relational integrity, all product-specific operations like receipts, delivery orders, transfers, and
+ * stock adjustments are stored in subcollections directly under their respective product document
+ * (e.g., /products/{productId}/receipts/{receiptId}).
+ *
+ * Key Security Decisions:
+ * - Admin-Only Writes: All data creation, modification, and deletion is restricted via a placeholder
+ *   `isAdmin()` function. This function must be implemented (e.g., using custom claims) to grant
+ *   write privileges.
+ * - Public Master Data: Categories, warehouses, and suppliers are publicly readable to facilitate
+ *   UI features like dropdowns and selectors for all users, including anonymous ones.
+ * - Authenticated Product Reads: The core product catalog is readable only by signed-in users,
+ *   protecting business data from public scraping.
+ * - Path-Based Integrity: For all product subcollections (like receipts), rules enforce that the
+ *   `productId` field within the document data matches the `productId` in the document path,
+ *   preventing data misallocation.
+ * - Prototyping Flexibility: These rules intentionally do not validate the specific shape or data
+ *   types of documents beyond what is necessary for authorization, allowing for rapid front-end
+ *   development and iteration.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ----------------------------------------------------------------------
+    // Helper Functions
+    // ----------------------------------------------------------------------
+
+    /**
+     * Checks if the user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Placeholder function to check for administrative privileges.
+     * CRITICAL: This must be implemented for writes to function.
+     * Example implementation using custom claims: return request.auth.token.admin == true;
+     */
+    function isAdmin() {
+      // TODO: Implement admin verification logic (e.g., using custom claims).
+      return false;
+    }
+
+    /**
+     * Verifies that a document exists before an update or delete operation.
+     * This prevents writes on documents that do not exist.
+     */
+    function isExistingDoc() {
+      return resource != null;
+    }
+
+    /**
+     * Enforces that the ID in the document path matches an ID field in the document's data.
+     * Used on create to establish and validate relational integrity.
+     */
+    function pathMatchesData(pathId, dataId) {
+      return pathId == dataId;
+    }
+
+    /**
+     * Enforces immutability for a given field on update operations.
+     * Compares the field in the existing document with the incoming request data.
+     */
+    function isImmutable(fieldName) {
+      return request.resource.data[fieldName] == resource.data[fieldName];
+    }
+
+
+    // ----------------------------------------------------------------------
+    // Collection Rules
+    // ----------------------------------------------------------------------
+
+    /**
+     * @description Controls access to product documents and their subcollections.
+     * @path        /products/{productId}
+     * @allow       (get, list) An authenticated user can read product data.
+     * @deny        (get, list) An anonymous user cannot read product data.
+     * @allow       (create, update, delete) An admin user can manage product documents.
+     * @deny        (create, update, delete) A non-admin user cannot manage products.
+     * @principle   Enforces authenticated read access and admin-only writes for core business data.
+     */
+    match /products/{productId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() && isAdmin();
+      allow update: if isSignedIn() && isAdmin() && isExistingDoc();
+      allow delete: if isSignedIn() && isAdmin() && isExistingDoc();
+
+      /**
+       * @description Rules for stock receipts, which are children of a specific product.
+       * @path        /products/{productId}/receipts/{receiptId}
+       * @allow       (create) An admin can create a receipt if its internal `productId` matches the path.
+       * @deny        (create) An admin attempts to create a receipt with a mismatched `productId`.
+       * @principle   Validates relational integrity between the child receipt and its parent product.
+       */
+      match /receipts/{receiptId} {
+        allow get: if isSignedIn();
+        allow list: if isSignedIn();
+        allow create: if isSignedIn() && isAdmin() && pathMatchesData(productId, request.resource.data.productId);
+        allow update: if isSignedIn() && isAdmin() && isExistingDoc() && isImmutable('productId');
+        allow delete: if isSignedIn() && isAdmin() && isExistingDoc();
+      }
+
+      /**
+       * @description Rules for delivery orders, which are children of a specific product.
+       * @path        /products/{productId}/deliveryOrders/{deliveryOrderId}
+       * @allow       (create) An admin can create a delivery order if its internal `productId` matches the path.
+       * @deny        (create) An admin attempts to create a delivery order with a mismatched `productId`.
+       * @principle   Validates relational integrity between the child order and its parent product.
+       */
+      match /deliveryOrders/{deliveryOrderId} {
+        allow get: if isSignedIn();
+        allow list: if isSignedIn();
+        allow create: if isSignedIn() && isAdmin() && pathMatchesData(productId, request.resource.data.productId);
+        allow update: if isSignedIn() && isAdmin() && isExistingDoc() && isImmutable('productId');
+        allow delete: if isSignedIn() && isAdmin() && isExistingDoc();
+      }
+
+      /**
+       * @description Rules for internal transfers, which are children of a specific product.
+       * @path        /products/{productId}/internalTransfers/{internalTransferId}
+       * @allow       (create) An admin can create a transfer if its internal `productId` matches the path.
+       * @deny        (create) An admin attempts to create a transfer with a mismatched `productId`.
+       * @principle   Validates relational integrity between the child transfer and its parent product.
+       */
+      match /internalTransfers/{internalTransferId} {
+        allow get: if isSignedIn();
+        allow list: if isSignedIn();
+        allow create: if isSignedIn() && isAdmin() && pathMatchesData(productId, request.resource.data.productId);
+        allow update: if isSignedIn() && isAdmin() && isExistingDoc() && isImmutable('productId');
+        allow delete: if isSignedIn() && isAdmin() && isExistingDoc();
+      }
+
+      /**
+       * @description Rules for stock adjustments, which are children of a specific product.
+       * @path        /products/{productId}/stockAdjustments/{stockAdjustmentId}
+       * @allow       (create) An admin can create an adjustment if its internal `productId` matches the path.
+       * @deny        (create) An admin attempts to create an adjustment with a mismatched `productId`.
+       * @principle   Validates relational integrity between the child adjustment and its parent product.
+       */
+      match /stockAdjustments/{stockAdjustmentId} {
+        allow get: if isSignedIn();
+        allow list: if isSignedIn();
+        allow create: if isSignedIn() && isAdmin() && pathMatchesData(productId, request.resource.data.productId);
+        allow update: if isSignedIn() && isAdmin() && isExistingDoc() && isImmutable('productId');
+        allow delete: if isSignedIn() && isAdmin() && isExistingDoc();
+      }
+    }
+
+    /**
+     * @description Controls access to product categories.
+     * @path        /categories/{categoryId}
+     * @allow       (get, list) Any user, including anonymous, can read category information.
+     * @deny        (create, update, delete) A non-admin user cannot modify categories.
+     * @allow       (create, update, delete) An admin user can manage categories.
+     * @principle   Allows public read for master data while restricting writes to administrators.
+     */
+    match /categories/{categoryId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if isSignedIn() && isAdmin();
+      allow update: if isSignedIn() && isAdmin() && isExistingDoc();
+      allow delete: if isSignedIn() && isAdmin() && isExistingDoc();
+    }
+
+    /**
+     * @description Controls access to warehouse information.
+     * @path        /warehouses/{warehouseId}
+     * @allow       (get, list) Any user, including anonymous, can read warehouse information.
+     * @deny        (create, update, delete) A non-admin user cannot modify warehouses.
+     * @allow       (create, update, delete) An admin user can manage warehouses.
+     * @principle   Allows public read for master data while restricting writes to administrators.
+     */
+    match /warehouses/{warehouseId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if isSignedIn() && isAdmin();
+      allow update: if isSignedIn() && isAdmin() && isExistingDoc();
+      allow delete: if isSignedIn() && isAdmin() && isExistingDoc();
+    }
+
+    /**
+     * @description Controls access to supplier information.
+     * @path        /suppliers/{supplierId}
+     * @allow       (get, list) Any user, including anonymous, can read supplier information.
+     * @deny        (create, update, delete) A non-admin user cannot modify suppliers.
+     * @allow       (create, update, delete) An admin user can manage suppliers.
+     * @principle   Allows public read for master data while restricting writes to administrators.
+     */
+    match /suppliers/{supplierId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if isSignedIn() && isAdmin();
+      allow update: if isSignedIn() && isAdmin() && isExistingDoc();
+      allow delete: if isSignedIn() && isAdmin() && isExistingDoc();
+    }
+  }
+}

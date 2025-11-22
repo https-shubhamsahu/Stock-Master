@@ -1,0 +1,413 @@
+{
+  "entities": {
+    "Product": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Product",
+      "type": "object",
+      "description": "Represents a product in the inventory.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Product entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the product."
+        },
+        "sku": {
+          "type": "string",
+          "description": "Stock Keeping Unit (SKU) or code of the product."
+        },
+        "categoryId": {
+          "type": "string",
+          "description": "Reference to Category. (Relationship: Category 1:N Product)"
+        },
+        "unitOfMeasure": {
+          "type": "string",
+          "description": "Unit of measure for the product (e.g., kg, piece, liter)."
+        },
+        "reorderingRules": {
+          "type": "string",
+          "description": "Reordering rules for the product. When to reorder. Example: When count is less than 10."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "sku",
+        "categoryId",
+        "unitOfMeasure"
+      ]
+    },
+    "Category": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Category",
+      "type": "object",
+      "description": "Represents a product category.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Category entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the category."
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "Receipt": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Receipt",
+      "type": "object",
+      "description": "Represents an incoming stock receipt.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Receipt entity."
+        },
+        "supplierId": {
+          "type": "string",
+          "description": "Reference to Supplier. (Relationship: Supplier 1:N Receipt)"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date of the receipt.",
+          "format": "date-time"
+        },
+        "productId": {
+          "type": "string",
+          "description": "Reference to Product. (Relationship: Product 1:N Receipt)"
+        },
+        "quantityReceived": {
+          "type": "number",
+          "description": "Quantity of the product received."
+        }
+      },
+      "required": [
+        "id",
+        "supplierId",
+        "date",
+        "productId",
+        "quantityReceived"
+      ]
+    },
+    "DeliveryOrder": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "DeliveryOrder",
+      "type": "object",
+      "description": "Represents an outgoing stock delivery order.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the DeliveryOrder entity."
+        },
+        "productId": {
+          "type": "string",
+          "description": "Reference to Product. (Relationship: Product 1:N DeliveryOrder)"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date of the delivery order.",
+          "format": "date-time"
+        },
+        "quantity": {
+          "type": "number",
+          "description": "Quantity of the product to be delivered."
+        }
+      },
+      "required": [
+        "id",
+        "productId",
+        "date",
+        "quantity"
+      ]
+    },
+    "InternalTransfer": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "InternalTransfer",
+      "type": "object",
+      "description": "Represents an internal stock transfer between locations.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the InternalTransfer entity."
+        },
+        "productId": {
+          "type": "string",
+          "description": "Reference to Product. (Relationship: Product 1:N InternalTransfer)"
+        },
+        "fromLocationId": {
+          "type": "string",
+          "description": "Reference to Warehouse. (Relationship: Warehouse 1:N InternalTransfer) Location from which the stock is transferred."
+        },
+        "toLocationId": {
+          "type": "string",
+          "description": "Reference to Warehouse. (Relationship: Warehouse 1:N InternalTransfer) Location to which the stock is transferred."
+        },
+        "quantity": {
+          "type": "number",
+          "description": "Quantity of the product transferred."
+        },
+        "date": {
+          "type": "string",
+          "description": "Date of the internal transfer.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "productId",
+        "fromLocationId",
+        "toLocationId",
+        "quantity",
+        "date"
+      ]
+    },
+    "StockAdjustment": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "StockAdjustment",
+      "type": "object",
+      "description": "Represents an adjustment to the stock level based on a physical count.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the StockAdjustment entity."
+        },
+        "productId": {
+          "type": "string",
+          "description": "Reference to Product. (Relationship: Product 1:N StockAdjustment)"
+        },
+        "locationId": {
+          "type": "string",
+          "description": "Reference to Warehouse. (Relationship: Warehouse 1:N StockAdjustment) Location where the stock adjustment is made."
+        },
+        "countedQuantity": {
+          "type": "number",
+          "description": "The quantity of the product after the physical count."
+        },
+        "adjustmentDate": {
+          "type": "string",
+          "description": "Date of the stock adjustment.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "productId",
+        "locationId",
+        "countedQuantity",
+        "adjustmentDate"
+      ]
+    },
+    "Warehouse": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Warehouse",
+      "type": "object",
+      "description": "Represents a warehouse or storage location.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Warehouse entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the warehouse."
+        },
+        "location": {
+          "type": "string",
+          "description": "Physical location address of the warehouse."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "location"
+      ]
+    },
+    "Supplier": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Supplier",
+      "type": "object",
+      "description": "Represents a supplier.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Supplier entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the supplier."
+        },
+        "contactEmail": {
+          "type": "string",
+          "description": "Contact email address of the supplier.",
+          "format": "email"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "contactEmail"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/products/{productId}",
+        "definition": {
+          "entityName": "Product",
+          "schema": {
+            "$ref": "#/backend/entities/Product"
+          },
+          "description": "Stores product information. Includes denormalized authorization fields if needed for collaborative scenarios (e.g., a 'members' map or 'ownerId' field), otherwise defaults to admin-only write access.",
+          "params": [
+            {
+              "name": "productId",
+              "description": "Unique identifier for the product."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/categories/{categoryId}",
+        "definition": {
+          "entityName": "Category",
+          "schema": {
+            "$ref": "#/backend/entities/Category"
+          },
+          "description": "Stores product category information. Public read access, admin-only write access.",
+          "params": [
+            {
+              "name": "categoryId",
+              "description": "Unique identifier for the category."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/products/{productId}/receipts/{receiptId}",
+        "definition": {
+          "entityName": "Receipt",
+          "schema": {
+            "$ref": "#/backend/entities/Receipt"
+          },
+          "description": "Stores incoming stock receipt data associated with a product. Requires the product ID as a parent.  Receipts are related to one product only.",
+          "params": [
+            {
+              "name": "productId",
+              "description": "Unique identifier for the associated product."
+            },
+            {
+              "name": "receiptId",
+              "description": "Unique identifier for the receipt."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/products/{productId}/deliveryOrders/{deliveryOrderId}",
+        "definition": {
+          "entityName": "DeliveryOrder",
+          "schema": {
+            "$ref": "#/backend/entities/DeliveryOrder"
+          },
+          "description": "Stores delivery order information associated with a product. Requires the product ID as a parent. Delivery Orders are related to one product only.",
+          "params": [
+            {
+              "name": "productId",
+              "description": "Unique identifier for the associated product."
+            },
+            {
+              "name": "deliveryOrderId",
+              "description": "Unique identifier for the delivery order."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/products/{productId}/internalTransfers/{internalTransferId}",
+        "definition": {
+          "entityName": "InternalTransfer",
+          "schema": {
+            "$ref": "#/backend/entities/InternalTransfer"
+          },
+          "description": "Stores internal transfer data.  Requires the product ID as a parent. Internal Transfers are related to one product only.",
+          "params": [
+            {
+              "name": "productId",
+              "description": "Unique identifier for the associated product."
+            },
+            {
+              "name": "internalTransferId",
+              "description": "Unique identifier for the internal transfer."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/products/{productId}/stockAdjustments/{stockAdjustmentId}",
+        "definition": {
+          "entityName": "StockAdjustment",
+          "schema": {
+            "$ref": "#/backend/entities/StockAdjustment"
+          },
+          "description": "Stores stock adjustment records. Requires the product ID as a parent.  Stock Adjustments are related to one product only.",
+          "params": [
+            {
+              "name": "productId",
+              "description": "Unique identifier for the associated product."
+            },
+            {
+              "name": "stockAdjustmentId",
+              "description": "Unique identifier for the stock adjustment."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/warehouses/{warehouseId}",
+        "definition": {
+          "entityName": "Warehouse",
+          "schema": {
+            "$ref": "#/backend/entities/Warehouse"
+          },
+          "description": "Stores warehouse information. Public read access, admin-only write access.",
+          "params": [
+            {
+              "name": "warehouseId",
+              "description": "Unique identifier for the warehouse."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/suppliers/{supplierId}",
+        "definition": {
+          "entityName": "Supplier",
+          "schema": {
+            "$ref": "#/backend/entities/Supplier"
+          },
+          "description": "Stores supplier information. Public read access, admin-only write access.",
+          "params": [
+            {
+              "name": "supplierId",
+              "description": "Unique identifier for the supplier."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure for StockMaster is designed to provide a secure, scalable, and easily maintainable inventory management system. It leverages path-based ownership for user-specific data and a top-level collection for shared data like categories. Authorization independence is achieved through denormalization where necessary, particularly for collaborative scenarios, avoiding the need for `get()` calls in security rules and ensuring atomic operations. Structural segregation ensures that collections contain documents with similar security needs. The design uses explicit state modeling and consistent naming conventions for improved clarity and predictability.\n\nSpecifically, Products and Categories are stored in top-level collections. Receipts, DeliveryOrders, InternalTransfers and StockAdjustments are nested under a Product to ensure integrity (as these operations always relate to a specific Product). Warehouses and Suppliers are stored at the top level.\n\nThis structure enables QAPs (Rules are not Filters) by allowing direct querying of collections based on denormalized authorization data, such as filtering products based on a user's role. Additionally, the path-based ownership (`/products/{productId}/receipts/{receiptId}`) ensures data isolation between users, which simplifies security rules and prevents unauthorized access. The use of explicit state modeling via the `status` field allows for secure listing and filtering based on the document's state, further supporting QAPs."
+  }
+}
