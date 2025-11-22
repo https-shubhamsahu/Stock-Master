@@ -2,8 +2,6 @@
 
 StockMaster is a modern, modular Inventory Management System (IMS) designed to digitize and streamline all stock-related operations for a business. It provides a real-time, centralized, and easy-to-use platform for managing products, tracking inventory, and handling various stock operations.
 
-![StockMaster Dashboard](https://storage.googleapis.com/aifire.dev/Images/stockmaster_dashboard_2.png)
-
 ## ✨ Key Features
 
 - **Authentication**: Secure user login and registration with email/password and Google social sign-in.
